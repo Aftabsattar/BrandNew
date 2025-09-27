@@ -1,0 +1,6 @@
+@BrandNew_HostAddress = http://localhost:5196
+
+GET {{BrandNew_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
