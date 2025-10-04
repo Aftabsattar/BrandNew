@@ -1,5 +1,6 @@
 ﻿using Curate.Application.DTO;
 using Curate.Application.IServices;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Curate.API.Controllers
@@ -14,7 +15,22 @@ namespace Curate.API.Controllers
             _ideaService = ideaService;
         }
 
-        [HttpPost]
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadImage(IFormFile formFile)
+        {
+            var FileName = Path.GetFileName(formFile.FileName);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\image", FileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await formFile.CopyToAsync(fileStream);
+            }
+
+            var baseurl = $"{Request.Scheme}://{Request.Host}";
+            var PublicUrl = $"{baseurl}/Image/{FileName}";
+            return Ok(PublicUrl);
+        }
+
+        [HttpPost("create")]
         public async Task<IActionResult> Create(RequestDto requestDto) 
         {
             var result = await _ideaService.Create(requestDto);
