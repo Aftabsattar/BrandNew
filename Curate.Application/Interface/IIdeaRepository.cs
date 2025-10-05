@@ -5,8 +5,8 @@ namespace Curate.Application.Interface;
 public interface IIdeaRepository
 {
     Task<bool> CreatAsync(Idea idea);
-    Task<bool> DeleteAsync(Idea idea);
-    bool UpdateAsync(Idea idea);
+    Task<bool> Delete(int id);
+    Task<bool> UpdateAsync(Idea idea);
     Task<Idea?> GetById(int id);
-    IQueryable<Idea> GetAll();
+    Task<List<Idea>> GetAll();
 }

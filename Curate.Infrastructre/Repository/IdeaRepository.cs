@@ -1,9 +1,7 @@
-﻿using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Azure.Core;
-using Curate.Application.Interface;
+﻿using Curate.Application.Interface;
 using Curate.Domain.Entities;
 using Curate.Infrastructre.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Curate.Infrastructre.Repository;
 
@@ -23,14 +21,18 @@ public class IdeaRepository : IIdeaRepository
         return false;
     }
 
-    public Task<bool> DeleteAsync(Idea idea)
+    public async Task<bool> Delete(int id)
     {
-        throw new NotImplementedException();
+        var existIdea = await _appDbContext.ideas.FindAsync(id);
+        if (existIdea == null) return false;
+         _appDbContext.ideas.Remove(existIdea);
+        await _appDbContext.SaveChangesAsync();
+        return true;
     }
 
-    public IQueryable<Idea> GetAll()
+    public async Task<List<Idea>> GetAll()
     {
-        throw new NotImplementedException();
+        return await _appDbContext.ideas.ToListAsync();
     }
 
     public async Task<Idea?> GetById(int id)
@@ -38,10 +40,10 @@ public class IdeaRepository : IIdeaRepository
         return await _appDbContext.ideas.FindAsync(id);
     }
 
-    public bool UpdateAsync(Idea idea)
+    public async Task<bool> UpdateAsync(Idea idea)
     {
-        _appDbContext.ideas.Update(idea);
-        _appDbContext.SaveChanges();
-        return true;
+       _appDbContext.ideas.Update(idea);
+       await _appDbContext.SaveChangesAsync();
+       return true;
     }
 }

@@ -1,70 +1,50 @@
-﻿
+﻿using AutoMapper;
 using Curate.Application.DTO;
 using Curate.Application.Interface;
 using Curate.Application.IServices;
 using Curate.Domain.Entities;
-using Microsoft.AspNetCore.Http;
-using Microsoft.VisualBasic;
 
 namespace Curate.Infrastructre.Services;
 
 public class IdeaService : IIdeaService
 {
     private readonly IIdeaRepository _idea;
-    public IdeaService(IIdeaRepository idea)
+    private readonly IMapper _mapper;
+    public IdeaService(IIdeaRepository idea, IMapper mapper)
     {
-        _idea = idea; 
+        _idea = idea;
+        _mapper = mapper;
     }
     public async Task<string> Create(RequestDto requestDto)
     {
-        var Save = new Idea
-        {
-            Title = requestDto.Title,
-            Description = requestDto.Description,
-            ImageUrl = requestDto.UploadImage != null ? await SaveImage(requestDto.UploadImage): string.Empty,
-        };
-        
-        var result = await _idea.CreatAsync(Save);
-          if (result)
-            return "Idea created succefulley";
-        return "Idea Not created succefulley";
+        var idea= _mapper.Map<Idea>(requestDto);
+        var result = await _idea.CreatAsync(idea);
+        return result ? "Idea created succefulley" : "Idea Not created succefulley";
     }
 
-    public string Delete(RequestDto requestDto)
+    public async Task<string> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+       var deleteResult = await _idea.Delete(id);
+        return deleteResult ? "idea Delete Successfully" : "idea not Delete Successfully";
     }
 
-    public string GetAll(RequestDto requestDto)
+    public async Task<List<Idea>> GetAll()
     {
-        throw new NotImplementedException();
+         return await _idea.GetAll();
+
     }
 
-    public string GetById(int id)
+    public async Task<Idea?> GetById(int id)
     {
-        throw new NotImplementedException();
+        return await _idea.GetById(id);
     }
 
-    public async Task<string> Update( int id, UpdateDto updatetDto)
+    public async Task<string> Update(int id, UpdateDto updateDto)
     {
-        var FindIdea= await _idea.GetById(id);
+        var FindIdea = await _idea.GetById(id);
         if (FindIdea == null) return "Idea not Found";
-        FindIdea.Title = updatetDto.Title;
-        FindIdea.Description = updatetDto.Description;
-        FindIdea.ImageUrl = updatetDto.MainImage != null ? await SaveImage(updatetDto.MainImage): string.Empty;
-        var result = _idea.UpdateAsync(FindIdea);
-        if (result) return "Idea Updated Succefully";
-        return "idea not Updated succefully";
-    }
-
-    public async Task<string> SaveImage(IFormFile formFile)
-    {
-        var FileName = Path.GetFileName(formFile.FileName);
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\image", FileName);
-        using (var fileStream = new FileStream(filePath, FileMode.Create)) 
-        {
-            await formFile.CopyToAsync(fileStream);
-        }
-            return filePath;
+        var Updatedidea = _mapper.Map(updateDto, FindIdea);
+        var result = await _idea.UpdateAsync(Updatedidea);
+        return result ? "Idea Updated Succefully" : "idea not Updated succefully";
     }
 }

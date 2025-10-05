@@ -1,6 +1,5 @@
 ﻿using Curate.Application.DTO;
 using Curate.Application.IServices;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Curate.API.Controllers
@@ -31,18 +30,38 @@ namespace Curate.API.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create(RequestDto requestDto) 
+        public async Task<IActionResult> Create(RequestDto requestDto)
         {
             var result = await _ideaService.Create(requestDto);
             return Ok(result);
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(int id, UpdateDto updatetDto) 
+        public async Task<IActionResult> Update(int id, UpdateDto updatetDto)
         {
             var result = await _ideaService.Update(id, updatetDto);
             return Ok(result);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var result = await _ideaService.GetAll();
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var resutl = await _ideaService.GetById(id);
+            return Ok(resutl);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _ideaService.DeleteAsync(id);
+            return Ok(result);
+        }
     }
 }
