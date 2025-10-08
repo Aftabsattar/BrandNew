@@ -4,9 +4,8 @@ using Curate.Domain.Entities;
 
 namespace Curate.Application.Mapper;
 
-public class IdeaProfile:Profile
+public class IdeaProfile: Profile
 {
-
     public IdeaProfile()
     {
         CreateMap<RequestDto,Idea>();
