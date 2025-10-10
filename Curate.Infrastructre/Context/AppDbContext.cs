@@ -10,4 +10,5 @@ public class AppDbContext:DbContext
 
     public DbSet<Idea> ideas { get; set; }
     public DbSet<Register> user { get; set; }
+    public DbSet<User> profiles { get; set; }
 }

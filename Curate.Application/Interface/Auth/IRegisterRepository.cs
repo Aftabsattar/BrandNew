@@ -1,10 +1,13 @@
-﻿namespace Curate.Application.Interface.Auth;
+﻿using Curate.Application.DTO;
+using Curate.Domain.Entities.Auth;
+
+namespace Curate.Application.Interface.Auth;
 
 public interface IRegisterRepository
 {
-    Task<bool> Create();
-    Task<bool> Delete();
-    Task<bool> GetAll();
-    Task<bool> GetById();
-    Task<bool> Update();
+    Task<bool> Create(Register registerDto);
+    Task<bool> Delete(int id);
+    Task<List<Register>> GetAll();
+    Task<Register> GetById(int id);
+    Task<bool> Update(Register updateDto);
 }

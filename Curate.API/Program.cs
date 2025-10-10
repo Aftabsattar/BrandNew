@@ -1,5 +1,6 @@
 using Curate.Application;
 using Curate.Application.Interface;
+using Curate.Application.Interface.Auth;
 using Curate.Application.IServices;
 using Curate.Infrastructre.Context;
 using Curate.Infrastructre.Repository;
@@ -12,6 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IIdeaService, IdeaService>();
 builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
+builder.Services.AddScoped<IRegisterService, UserService>();
+builder.Services.AddScoped<IRegisterRepository, UserRepository>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddApplication();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

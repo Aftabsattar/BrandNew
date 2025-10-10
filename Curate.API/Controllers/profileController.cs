@@ -1,24 +1,24 @@
-﻿using Curate.Application.DTO;
+﻿using Curate.Application.DTO.Profile;
 using Curate.Application.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Curate.API.Controllers
 {
-    [Route("api/idea")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class IdeaController : ControllerBase
+    public class profileController : ControllerBase
     {
-        private readonly IIdeaService _ideaService;
-        public IdeaController(IIdeaService ideaService)
+        private readonly IUserProfileService _profileService;
+        public profileController(IUserProfileService profileService)
         {
-            _ideaService = ideaService;
+            _profileService = profileService;
         }
 
         [HttpPost("upload")]
         public async Task<IActionResult> UploadImage(IFormFile formFile)
         {
             var FileName = Path.GetFileName(formFile.FileName);
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\image", FileName);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\profile", FileName);
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
                 await formFile.CopyToAsync(fileStream);
@@ -29,38 +29,37 @@ namespace Curate.API.Controllers
             return Ok(PublicUrl);
         }
 
-        [HttpPost("create")]
-        public async Task<IActionResult> Create(RequestDto requestDto)
+        [HttpPost]
+        public async Task<IActionResult> Create(ProfileDto profile)
         {
-            var result = await _ideaService.Create(requestDto);
+            var result = await _profileService.Create(profile);
             return Ok(result);
         }
-
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateDto updatetDto)
+        public async Task<IActionResult> Update(int id , ProfileDto profileDto) 
         {
-            var result = await _ideaService.Update(id, updatetDto);
+            var result = await _profileService.Update(id , profileDto);
             return Ok(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _ideaService.GetAll();
+            var result = await _profileService.GetAll();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var resutl = await _ideaService.GetById(id);
-            return Ok(resutl);
+            var result = await _profileService.GetById(id);
+            return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _ideaService.DeleteAsync(id);
+            var result = await _profileService.Delete(id);
             return Ok(result);
         }
     }

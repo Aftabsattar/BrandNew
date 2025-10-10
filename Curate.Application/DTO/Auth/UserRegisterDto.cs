@@ -1,7 +1,6 @@
 ﻿namespace Curate.Application.DTO.Auth;
 
-public class RegisterDto
+public class UserRegisterDto
 {
-    public int Id { get; set; }
     public string Email{ get; set; } = string.Empty;
 }

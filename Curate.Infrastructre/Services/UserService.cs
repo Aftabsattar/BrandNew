@@ -1,39 +1,60 @@
-﻿using Curate.Application.DTO.Auth;
+﻿using AutoMapper;
+using Curate.Application.DTO.Auth;
 using Curate.Application.Interface.Auth;
 using Curate.Application.IServices;
+using Curate.Domain.Entities.Auth;
 
 namespace Curate.Infrastructre.Services;
 
-public class UserService:IUserRegisterService
+public class UserService:IRegisterService
 {
     private readonly IRegisterRepository _userRepository;
-    public UserService(IRegisterRepository userRepository)
+    private readonly IMapper _mapper;
+    public UserService(IRegisterRepository userRepository, IMapper mapper)
     {
         _userRepository = userRepository;
+        _mapper = mapper;
     }
 
-    public Task<string> Delete()
+    public async Task<string> Delete(int id)
     {
-        throw new NotImplementedException();
+        var result = await _userRepository.Delete(id);
+        return result ? "User Delete succesfuly" : "User not Delete succesfuly";
     }
 
-    public Task<string> GetAll()
+    public async Task<List<Register>> GetAll() 
     {
-        throw new NotImplementedException();
+        return await _userRepository.GetAll();
     }
 
-    public Task<string> GetById(int id)
+    public async Task<Register> GetById(int id)
     {
-        throw new NotImplementedException();
+        return await _userRepository.GetById(id);
     }
 
-    public Task<string> Register(RegisterDto registerDto)
+    public async Task<string> Create(UserRegisterDto registerDto)
     {
-        var result = _userRepository.Register(registerDto);
+        if (registerDto != null)
+        {
+            var user = _mapper.Map<Register>(registerDto);
+            var result = await _userRepository.Create(user);
+            if (result) return "User Create Successfully";
+        }
+        return "User Already Exist";
     }
 
-    public Task<string> Update(string name)
+    public async Task<string> Update(int id, UserUpdateDto updateDto)
     {
-        throw new NotImplementedException();
+        if (updateDto != null) 
+        {
+            var FindUser = await _userRepository.GetById(id);
+            if (FindUser != null) 
+            {
+                var UpdatedUser = _mapper.Map(updateDto,FindUser);
+                var result = await _userRepository.Update(UpdatedUser);
+                if (result) return "User Updated Succefully";
+            }
+        }
+        return "User NOt Updated Succefully";
     }
 }
