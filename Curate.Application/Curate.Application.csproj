@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Curate.Domain\Curate.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTO\Auth\" />
+  </ItemGroup>
+
 </Project>

@@ -5,47 +5,46 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Curate.Infrastructre.Repository;
 
-public class UserRepository : IRegisterRepository
+public class OtpRepository : IOtpRepository
 {
     private readonly AppDbContext _appDbContext;
-    public UserRepository(AppDbContext appDbContext)
+    public OtpRepository(AppDbContext appDbContext)
     {
         _appDbContext = appDbContext;
     }
-    public async Task<bool> Create(Register register)
+    public async Task<bool> Create(OTP otp)
     {
-        var result = await _appDbContext.user.FindAsync(register.Id);
+        var result = await _appDbContext.otps.FindAsync(otp.Id);
         if (result != null) return false;
-        await _appDbContext.user.AddAsync(register);
+        await _appDbContext.otps.AddAsync(otp);
         await _appDbContext.SaveChangesAsync();
         return true;
     }
 
     public async Task<bool> Delete(int id)
     {
-        var result = await _appDbContext.user.FindAsync(id);
+        var result = await _appDbContext.otps.FindAsync(id);
         if (result != null)
         {
-            _appDbContext.user.Remove(result);
+            _appDbContext.otps.Remove(result);
             _appDbContext.SaveChanges();
             return true;
         }
         return false;
     }
 
-    public async Task<List<Register>> GetAll()
+    public async Task<List<OTP>> GetAll()
     {
-        return await _appDbContext.user.ToListAsync();
+        return await _appDbContext.otps.ToListAsync();
+    }
+    public async Task<OTP?> GetByEmail(string email)
+    {
+        return await _appDbContext.otps.FirstOrDefaultAsync(x=> x.Email==email); 
     }
 
-    public async Task<Register> GetById(int id)
+    public async Task<bool> Update(OTP otp)
     {
-        return await _appDbContext.user.FindAsync(id); 
-    }
-
-    public async Task<bool> Update(Register register)
-    {
-        var result = _appDbContext.user.Update(register);
+        var result = _appDbContext.otps.Update(otp);
         await _appDbContext.SaveChangesAsync();
         return result != null ? true : false;
     }

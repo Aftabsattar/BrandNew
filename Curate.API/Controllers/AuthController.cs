@@ -1,5 +1,4 @@
-﻿using Curate.Application.DTO.Auth;
-using Curate.Application.IServices;
+﻿using Curate.Application.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Curate.API.Controllers
@@ -8,45 +7,24 @@ namespace Curate.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IRegisterService _userRegisterService;
-        public AuthController(IRegisterService userRegisterService)
+        private readonly IOtpService _otpService;
+        public AuthController(IOtpService userRegisterService)
         {
-            _userRegisterService = userRegisterService;
+            _otpService  = userRegisterService;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserRegisterDto registerDto)
+        public async Task<IActionResult> CreateOtp(string email)
         {
-            var result = await _userRegisterService.Create(registerDto);
+            var result =await _otpService.TokenGenerationWithEmail(email);
             return Ok(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpPost("token")] 
+        public async Task<IActionResult> VerificationOtp(string email,int token)
         {
-            var result = await _userRegisterService.GetAll();
-            return Ok(result);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
-        {
-            var result = await _userRegisterService.GetById(id);
-            return Ok(result);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id,UserUpdateDto registerDto)
-        {
-            var result = await _userRegisterService.Update(id, registerDto);
-            return Ok(result);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var result = await _userRegisterService.Delete(id);
-            return Ok(result);
+             await _otpService.Verify(email,token);
+            return Ok();
         }
     }
 }
