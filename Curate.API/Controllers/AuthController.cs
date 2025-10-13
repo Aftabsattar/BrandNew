@@ -23,8 +23,8 @@ namespace Curate.API.Controllers
         [HttpPost("token")] 
         public async Task<IActionResult> VerificationOtp(string email,int token)
         {
-             await _otpService.Verify(email,token);
-            return Ok();
+           var result = await _otpService.Verify(email,token);
+            return Ok(result);
         }
     }
 }

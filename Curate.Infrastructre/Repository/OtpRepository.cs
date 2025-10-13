@@ -42,10 +42,9 @@ public class OtpRepository : IOtpRepository
         return await _appDbContext.otps.FirstOrDefaultAsync(x=> x.Email==email); 
     }
 
-    public async Task<bool> Update(OTP otp)
+    public async Task Update(OTP otp)
     {
         var result = _appDbContext.otps.Update(otp);
         await _appDbContext.SaveChangesAsync();
-        return result != null ? true : false;
     }
 }

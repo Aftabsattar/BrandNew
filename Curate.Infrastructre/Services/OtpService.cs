@@ -53,7 +53,8 @@ public class OtpService : IOtpService
         if (findOtp.Otp == token)
         {
             findOtp.IsUsed = true;
+            await _otpRepository.Update(findOtp);
         }
-        return "";
+        return "OTP verify successfuly";
     }
 }
