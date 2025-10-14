@@ -20,6 +20,8 @@ builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.Configure<Email>(builder.Configuration.GetSection("SmtpSetting"));
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IUserRegisterService, UserRegisterService>();
+builder.Services.AddScoped<IUserRegisterRepository, UserRegisterRepository>();
 builder.Services.AddApplication();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

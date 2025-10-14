@@ -10,5 +10,6 @@ public class AppDbContext:DbContext
 
     public DbSet<Idea> ideas { get; set; }
     public DbSet<OTP> otps { get; set; }
-    public DbSet<User> profiles { get; set; }
+    public DbSet<UserRegister> users { get; set; }
+    public DbSet<UserProfile> profiles { get; set; }
 }

@@ -12,7 +12,7 @@ public class ProfileRepository : IProfileRepository
     {
         _context = context;
     }
-    public async Task<bool> Create(User profile)
+    public async Task<bool> Create(UserProfile profile)
     {
         var user = await _context.profiles.FindAsync(profile.id); 
         if (user != null) return false;
@@ -30,17 +30,17 @@ public class ProfileRepository : IProfileRepository
         return true;
     }
 
-    public async Task<List<User>> GetAll()
+    public async Task<List<UserProfile>> GetAll()
     {
         return await _context.profiles.ToListAsync();
     }
 
-    public async Task<User> GetById(int id)
+    public async Task<UserProfile> GetById(int id)
     {
         return await _context.profiles.FindAsync(id);
     }
 
-    public async Task<bool> Update(User user)
+    public async Task<bool> Update(UserProfile user)
     {
         var result = _context.profiles.Update(user);
         await _context.SaveChangesAsync();

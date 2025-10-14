@@ -1,4 +1,5 @@
-﻿using Curate.Application.IServices;
+﻿using Curate.Application.DTO.Auth;
+using Curate.Application.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Curate.API.Controllers
@@ -8,9 +9,11 @@ namespace Curate.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IOtpService _otpService;
-        public AuthController(IOtpService userRegisterService)
+        private readonly IUserRegisterService _userRegisterService;
+        public AuthController(IOtpService otpService, IUserRegisterService userRegisterService)
         {
-            _otpService  = userRegisterService;
+            _otpService  = otpService;
+            _userRegisterService = userRegisterService;
         }
 
         [HttpPost]
@@ -20,10 +23,24 @@ namespace Curate.API.Controllers
             return Ok(result);
         }
 
-        [HttpPost("token")] 
-        public async Task<IActionResult> VerificationOtp(string email,int token)
+        [HttpPost("token")]
+        public async Task<IActionResult> VerificationOtp(string email, int token)
         {
-           var result = await _otpService.Verify(email,token);
+            var result = await _otpService.Verify(email, token);
+            return Ok(result);
+        }
+
+        [HttpPost("passcode")]
+        public async Task<IActionResult> Create(PasscodeDto passcodeDto)
+        {
+            var result = await _userRegisterService.Create(passcodeDto);
+            return Ok(result);
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(PasscodeDto passcodeDto) 
+        {
+            var result = await _userRegisterService.Update(passcodeDto);
             return Ok(result);
         }
     }

@@ -1,5 +1,4 @@
-﻿using System.Xml.XPath;
-using AutoMapper;
+﻿using AutoMapper;
 using Curate.Application.DTO.Profile;
 using Curate.Application.Interface;
 using Curate.Application.IServices;
@@ -21,7 +20,7 @@ public class UserProfileService : IUserProfileService
     {
         if(profile != null) 
         {
-            var mapUser = _mapper.Map<User>(profile);
+            var mapUser = _mapper.Map<UserProfile>(profile);
             var result = await _profileRepository.Create(mapUser);
             if (result) return "User Create Successfully";
         }
@@ -34,12 +33,12 @@ public class UserProfileService : IUserProfileService
         return result ? "User deleted Successfuly" : "User Not deleted Successfuly";
     }
 
-    public async Task<List<User>> GetAll()
+    public async Task<List<UserProfile>> GetAll()
     {
         return await _profileRepository.GetAll();
     }
 
-    public async Task<User> GetById(int id)
+    public async Task<UserProfile> GetById(int id)
     {
         return await _profileRepository.GetById(id);
     }

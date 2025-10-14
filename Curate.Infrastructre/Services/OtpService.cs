@@ -18,15 +18,8 @@ public class OtpService : IOtpService
     public int GenerateOtp() 
     {
         var otpbyte = RandomNumberGenerator.GetBytes(4);
-        var otp =Convert.ToInt32(BitConverter.ToUInt32(otpbyte,0)%1000000);
+        var otp = BitConverter.ToInt32(otpbyte,0) % 10000;
         return otp;
-    }
-
-    public string GeneratePasscode()
-    {
-        var otpbyte = RandomNumberGenerator.GetBytes(4);
-        var otp = BitConverter.ToUInt32(otpbyte, 0) % 10000;
-        return otp.ToString();
     }
 
     public async Task<string> TokenGenerationWithEmail(string email)
@@ -41,7 +34,7 @@ public class OtpService : IOtpService
         };
         var result = await _otpRepository.Create(user);
         if (result) await _emailService.SendEmailWithOtp(user.Email,user.Otp);
-        return $"Email send to{user.Email}";
+        return $"Email send to {user.Email}";
     }
 
     public async Task<string> Verify(string email, int token)
