@@ -9,10 +9,14 @@ public class OtpService : IOtpService
 {
     private readonly IOtpRepository _otpRepository;
     private readonly IEmailService _emailService;
-    public OtpService(IOtpRepository otpRepository, IEmailService emailService)
+    private readonly IUserRegisterService _userRegisterService;
+    private readonly IJwtService _jwtService;
+    public OtpService(IOtpRepository otpRepository, IEmailService emailService, IUserRegisterService userRegisterService, IJwtService jwtService)
     {
         _otpRepository = otpRepository;
         _emailService = emailService;
+        _userRegisterService = userRegisterService;
+        _jwtService = jwtService;
     }
 
     public int GenerateOtp() 
@@ -22,7 +26,7 @@ public class OtpService : IOtpService
         return otp;
     }
 
-    public async Task<string> TokenGenerationWithEmail(string email)
+    public async Task<string> OtpGenerationWithEmail(string email)
     {
         if (email == null) throw new Exception("Please Enter a Email");
         var user = new OTP
@@ -37,17 +41,16 @@ public class OtpService : IOtpService
         return $"Email send to {user.Email}";
     }
 
-    public async Task<string> Verify(string email, int token)
+    public async Task<string> Verify(string email, int otp)
     {
         var findOtp = await _otpRepository.GetByEmail(email);
         if (findOtp == null) return "Otp Not Found";
-        if (DateTime.UtcNow > findOtp.ExpireyTime) return "OTP Expired";
-        if (findOtp.IsUsed) return "this OTp allready used";
-        if (findOtp.Otp == token)
-        {
-            findOtp.IsUsed = true;
-            await _otpRepository.Update(findOtp);
-        }
-        return "OTP verify successfuly";
+        if (DateTime.UtcNow > findOtp.ExpireyTime && findOtp.IsUsed) return "OTP Expired OR this allready used ";
+        findOtp.IsUsed = true;
+        await _otpRepository.Update(findOtp);
+        var user = await _userRegisterService.GetByEmail(email);
+        if (user != null) return _jwtService.GenerateJwtToken(user);
+        var NewUser = await _userRegisterService.Create(email);
+        return _jwtService.GenerateJwtToken(NewUser);
     }
 }

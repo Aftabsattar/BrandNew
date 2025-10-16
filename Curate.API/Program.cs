@@ -12,13 +12,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<AppDbContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.Configure<Email>(builder.Configuration.GetSection("SmtpSetting"));
+builder.Services.Configure<Email>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddScoped<IIdeaService, IdeaService>();
 builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
 builder.Services.AddScoped<IOtpService, OtpService>();
 builder.Services.AddScoped<IOtpRepository, OtpRepository>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
-builder.Services.Configure<Email>(builder.Configuration.GetSection("SmtpSetting"));
+builder.Services.AddScoped<IJwtService, JwtService>();
+//builder.Services.AddScoped<>
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserRegisterService, UserRegisterService>();
 builder.Services.AddScoped<IUserRegisterRepository, UserRegisterRepository>();

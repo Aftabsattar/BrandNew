@@ -2,6 +2,6 @@
 
 public interface IOtpService
 {
-    Task<string> TokenGenerationWithEmail(string email);
+    Task<string> OtpGenerationWithEmail(string email);
     Task<string> Verify(string email ,int token);
 }

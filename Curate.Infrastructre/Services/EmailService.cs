@@ -20,7 +20,7 @@ public class EmailService : IEmailService
         email.From.Add(MailboxAddress.Parse(_mailsetting.From));
         email.To.Add(MailboxAddress.Parse(toEmail));
         email.Subject = "Your OTP Code";
-
+        
         email.Body = new TextPart("Plain") 
         {
             Text = $"Your OTp is {otp}.it will expire in 5 minutes."

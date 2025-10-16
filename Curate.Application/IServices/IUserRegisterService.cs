@@ -1,13 +1,11 @@
-﻿using Curate.Application.DTO.Auth;
+﻿using Curate.Domain.Entities.Auth;
 
 namespace Curate.Application.IServices;
 
 public interface IUserRegisterService
 {
-    Task<string> Create(PasscodeDto createDto);
-    Task<string> Update(PasscodeDto createDto);
-    //Task<string> Delete(int id);
-    //Task<List<UserRegister>> GetAll();
-    //Task<UserRegister> GetById(int id);
-    //Task<string> PasscodeGeneration(PasscodeDto passcodeDto);
+    Task<UserRegister> Create(string email);
+    //Task<string> Update(UserRegister  user);
+    Task<UserRegister> GetByEmail(string email);
+    Task<UserRegister> GetById(int id);
 }

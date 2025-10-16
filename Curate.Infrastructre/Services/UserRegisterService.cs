@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Curate.Application.DTO.Auth;
+﻿using Curate.Application.DTO.Auth;
 using Curate.Application.Interface;
 using Curate.Application.IServices;
 using Curate.Domain.Entities.Auth;
@@ -9,24 +8,29 @@ namespace Curate.Infrastructre.Services;
 public class UserRegisterService : IUserRegisterService
 {
     private readonly IUserRegisterRepository _userRegisterRepo;
-    private readonly IMapper _mapper;
-    public UserRegisterService(IUserRegisterRepository userRegisterRepo, IMapper mapper)
+    public UserRegisterService(IUserRegisterRepository userRegisterRepo)
     {
         _userRegisterRepo = userRegisterRepo;
-        _mapper = mapper;
     }
 
-    public async Task<string> Create(PasscodeDto passcodeDto)
+    public async Task<UserRegister> Create(string email)
     {
-        if (passcodeDto == null) throw new Exception("please Enter a passcode");
-        var passcode = new UserRegister
+        var user = new UserRegister
         {
-            Email = passcodeDto.Email,
-            Passcode = passcodeDto.Passcode,
+            Email = email,
         };
-        var result = await _userRegisterRepo.Create(passcode);
-        if (result) return "Passcode create successfulley";
-        return "passcode already exist";
+        var result = await _userRegisterRepo.Create(user);
+        return result;
+    }
+
+    public async Task<UserRegister> GetByEmail(string email)
+    {
+        return await _userRegisterRepo.GetByEmail(email);
+    }
+
+    public async Task<UserRegister> GetById(int id)
+    {
+        return await _userRegisterRepo.GetById(id);
     }
 
     public async Task<string> Update(PasscodeDto user)
@@ -34,7 +38,6 @@ public class UserRegisterService : IUserRegisterService
         var FindUser = await _userRegisterRepo.GetByEmail(user.Email);
         if (FindUser != null && user != null)
         {
-            FindUser.Passcode = user.Passcode;
             var result = await _userRegisterRepo.Update(FindUser);
             if (result) return "User passcode successfulley";
         }
