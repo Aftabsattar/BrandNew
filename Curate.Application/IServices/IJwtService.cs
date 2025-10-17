@@ -4,5 +4,5 @@ namespace Curate.Application.IServices;
 
 public interface IJwtService
 {
-   string GenerateJwtToken(UserRegister userRegister);
+   string GenerateJwtToken(User userRegister);
 }

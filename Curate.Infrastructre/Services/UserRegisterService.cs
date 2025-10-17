@@ -13,9 +13,9 @@ public class UserRegisterService : IUserRegisterService
         _userRegisterRepo = userRegisterRepo;
     }
 
-    public async Task<UserRegister> Create(string email)
+    public async Task<User> Create(string email)
     {
-        var user = new UserRegister
+        var user = new User
         {
             Email = email,
         };
@@ -23,24 +23,27 @@ public class UserRegisterService : IUserRegisterService
         return result;
     }
 
-    public async Task<UserRegister> GetByEmail(string email)
+    public async Task<User> GetByEmail(string email)
     {
         return await _userRegisterRepo.GetByEmail(email);
     }
 
-    public async Task<UserRegister> GetById(int id)
+    public async Task<User> GetById(int id)
     {
         return await _userRegisterRepo.GetById(id);
     }
 
-    public async Task<string> Update(PasscodeDto user)
+    public async Task<string> Update(UpdateUserDto user)
     {
         var FindUser = await _userRegisterRepo.GetByEmail(user.Email);
         if (FindUser != null && user != null)
         {
+            FindUser.Email = user.Email;
+            FindUser.Passcode = user.Passcode;
+            FindUser.PasscodeCreatedAt = user.PasscodeCreatedAt;
             var result = await _userRegisterRepo.Update(FindUser);
-            if (result) return "User passcode successfulley";
+            if (result) return "User update successfulley";
         }
-        return "User passcode Not Update successfulley";
+        return "User Not Update successfulley";
     }
 }

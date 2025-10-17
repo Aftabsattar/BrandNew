@@ -16,7 +16,7 @@ public class JwtService : IJwtService
         _configuration = configuration;
     }
 
-    public string GenerateJwtToken(UserRegister userRegister)
+    public string GenerateJwtToken(User userRegister)
     {
         var JwtSetting = _configuration.GetSection("Jwt");
         var key = JwtSetting["Key"];

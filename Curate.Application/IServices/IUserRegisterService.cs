@@ -1,11 +1,12 @@
-﻿using Curate.Domain.Entities.Auth;
+﻿using Curate.Application.DTO.Auth;
+using Curate.Domain.Entities.Auth;
 
 namespace Curate.Application.IServices;
 
 public interface IUserRegisterService
 {
-    Task<UserRegister> Create(string email);
-    //Task<string> Update(UserRegister  user);
-    Task<UserRegister> GetByEmail(string email);
-    Task<UserRegister> GetById(int id);
+    Task<User> Create(string email);
+    Task<string> Update(UpdateUserDto  user);
+    Task<User> GetByEmail(string email);
+    Task<User> GetById(int id);
 }

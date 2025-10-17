@@ -4,8 +4,8 @@ namespace Curate.Application.Interface;
 
 public interface IUserRegisterRepository
 {
-    Task<UserRegister> Create(UserRegister passcodeDto);
-    Task<bool> Update(UserRegister passcodeDto);
-    Task<UserRegister> GetById(int id);
-    Task<UserRegister> GetByEmail(string email);
+    Task<User> Create(User user);
+    Task<bool> Update(User user);
+    Task<User> GetById(int id);
+    Task<User> GetByEmail(string email);
 }

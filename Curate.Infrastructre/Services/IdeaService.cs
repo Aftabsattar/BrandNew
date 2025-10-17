@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Curate.Application.DTO;
+using Curate.Application.DTO.Idea;
 using Curate.Application.Interface;
 using Curate.Application.IServices;
 using Curate.Domain.Entities;
@@ -15,7 +15,7 @@ public class IdeaService : IIdeaService
         _idea = idea;
         _mapper = mapper;
     }
-    public async Task<string> Create(RequestDto requestDto)
+    public async Task<string> Create(IdeaRequestDto requestDto)
     {
         var idea= _mapper.Map<Idea>(requestDto);
         var result = await _idea.CreatAsync(idea);
@@ -39,7 +39,7 @@ public class IdeaService : IIdeaService
         return await _idea.GetById(id);
     }
 
-    public async Task<string> Update(int id, UpdateDto updateDto)
+    public async Task<string> Update(int id, IdeaUpdateDto updateDto)
     {
         var FindIdea = await _idea.GetById(id);
         if (FindIdea == null) return "Idea not Found";

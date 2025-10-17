@@ -1,8 +1,8 @@
 ﻿namespace Curate.Application.DTO.Auth;
 
-public class PasscodeDto
+public class UpdateUserDto
 {
     public string Email { get; set; } = string.Empty;
     public int Passcode { get; set; }
-    public DateTime PasscodeCreateAt { get; set; }
+    public DateTime PasscodeCreatedAt { get; set; }
 }

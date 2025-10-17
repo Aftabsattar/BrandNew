@@ -1,6 +1,6 @@
 ﻿namespace Curate.Application.DTO.Auth;
 
-public class UserUpdateDto
+public class RequestOtpDto
 {
     public string Email { get; set; } = string.Empty;
 }
