@@ -5,46 +5,47 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Curate.Infrastructre.Repository;
 
-public class OtpRepository : IOtpRepository
+public class AuthRepository : IAuthRepository
 {
     private readonly AppDbContext _appDbContext;
-    public OtpRepository(AppDbContext appDbContext)
+    public AuthRepository(AppDbContext appDbContext)
     {
         _appDbContext = appDbContext;
     }
-    public async Task<bool> Create(OTP otp)
+
+    public async Task<bool> Create(User otp)
     {
-        var result = await _appDbContext.otps.FindAsync(otp.Id);
+        var result = await _appDbContext.users.FindAsync(otp.Id);
         if (result != null) return false;
-        await _appDbContext.otps.AddAsync(otp);
+        await _appDbContext.users.AddAsync(otp);
         await _appDbContext.SaveChangesAsync();
         return true;
     }
 
     public async Task<bool> Delete(int id)
     {
-        var result = await _appDbContext.otps.FindAsync(id);
+        var result = await _appDbContext.users.FindAsync(id);
         if (result != null)
         {
-            _appDbContext.otps.Remove(result);
+            _appDbContext.users.Remove(result);
             _appDbContext.SaveChanges();
             return true;
         }
         return false;
     }
 
-    public async Task<List<OTP>> GetAll()
+    public async Task<List<User>> GetAll()
     {
-        return await _appDbContext.otps.ToListAsync();
+        return await _appDbContext.users.ToListAsync();
     }
-    public async Task<OTP?> GetByEmail(string email)
+    public async Task<User?> GetByEmail(string email)
     {
-        return await _appDbContext.otps.FirstOrDefaultAsync(x=> x.Email==email); 
+        return await _appDbContext.users.FirstOrDefaultAsync(x=> x.Email==email); 
     }
 
-    public async Task Update(OTP otp)
+    public async Task Update(User user)
     {
-        var result = _appDbContext.otps.Update(otp);
+        _appDbContext.users.Update(user);
         await _appDbContext.SaveChangesAsync();
     }
 }

@@ -1,4 +1,4 @@
-﻿using Curate.Application.DTO;
+﻿using Curate.Application.DTO.Idea;
 using Curate.Application.IServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,14 +30,14 @@ namespace Curate.API.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<IActionResult> Create(RequestDto requestDto)
+        public async Task<IActionResult> Create(IdeaRequestDto requestDto)
         {
             var result = await _ideaService.Create(requestDto);
             return Ok(result);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateDto updatetDto)
+        public async Task<IActionResult> Update(int id, IdeaUpdateDto updatetDto)
         {
             var result = await _ideaService.Update(id, updatetDto);
             return Ok(result);

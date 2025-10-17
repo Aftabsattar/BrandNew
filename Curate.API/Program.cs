@@ -16,8 +16,8 @@ builder.Services.Configure<Email>(builder.Configuration.GetSection("SmtpSetting"
 builder.Services.Configure<Email>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddScoped<IIdeaService, IdeaService>();
 builder.Services.AddScoped<IIdeaRepository, IdeaRepository>();
-builder.Services.AddScoped<IOtpService, OtpService>();
-builder.Services.AddScoped<IOtpRepository, OtpRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();

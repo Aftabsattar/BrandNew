@@ -12,7 +12,7 @@ public class UserRegisterRepository : IUserRegisterRepository
     {
         _appDbContext = appDbContext;
     }
-    public async Task<UserRegister> Create(UserRegister user)
+    public async Task<User> Create(User user)
     {
         var finduser = await _appDbContext.users.FindAsync(user.Id);
         if (finduser != null) throw new Exception("User Already exist");
@@ -21,17 +21,17 @@ public class UserRegisterRepository : IUserRegisterRepository
         return NewUserEntry.Entity;
     }
 
-    public async Task<UserRegister> GetByEmail(string email)
+    public async Task<User> GetByEmail(string email)
     {
         return await _appDbContext.users.FirstOrDefaultAsync(x=>x.Email== email);
     }
 
-    public async Task<UserRegister> GetById(int id)
+    public async Task<User> GetById(int id)
     {
         return await _appDbContext.users.FindAsync(id);
     }
 
-    public async Task<bool> Update(UserRegister passcode)
+    public async Task<bool> Update(User passcode)
     {
         _appDbContext.users.Update(passcode);
         await _appDbContext.SaveChangesAsync();
