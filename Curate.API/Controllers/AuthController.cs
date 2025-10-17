@@ -1,4 +1,5 @@
-﻿using Curate.Application.DTO.Auth;
+﻿using Curate.Application.DTO.Auth.Login;
+using Curate.Application.DTO.Auth.SignUp;
 using Curate.Application.IServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,6 +41,20 @@ namespace Curate.API.Controllers
         public async Task<IActionResult> Update(PasscodeDto passcodeDto)
         {
             var result = await _authService.UpdatePasscode(passcodeDto);
+            return Ok(result);
+        }
+
+        [HttpPost("Login-with-passcode")]
+        public async Task<IActionResult> Login(LoginWithPasscodeDto login) 
+        {
+            var result = await _authService.Login(login);
+            return Ok(result);
+        }
+
+        [HttpPost("Login-with-Email")]
+        public async Task<IActionResult> LoginWithEmail(RequestOtpDto login) 
+        {
+            var result = Convert.ToInt32(await _authService.OtpGenerationWithEmail(login));
             return Ok(result);
         }
     }

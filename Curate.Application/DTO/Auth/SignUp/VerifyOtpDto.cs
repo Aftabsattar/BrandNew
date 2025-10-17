@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Curate.Application.DTO.Auth;
+namespace Curate.Application.DTO.Auth.SignUp;
 
 public class VerifyOtpDto
 {

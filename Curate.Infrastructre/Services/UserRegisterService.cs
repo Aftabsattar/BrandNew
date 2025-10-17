@@ -1,4 +1,4 @@
-﻿using Curate.Application.DTO.Auth;
+﻿using Curate.Application.DTO.Auth.SignUp;
 using Curate.Application.Interface;
 using Curate.Application.IServices;
 using Curate.Domain.Entities.Auth;

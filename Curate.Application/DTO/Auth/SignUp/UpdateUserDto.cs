@@ -1,4 +1,4 @@
-﻿namespace Curate.Application.DTO.Auth;
+﻿namespace Curate.Application.DTO.Auth.SignUp;
 
 public class UpdateUserDto
 {

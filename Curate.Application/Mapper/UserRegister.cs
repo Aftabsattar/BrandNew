@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Curate.Application.DTO.Auth;
+using Curate.Application.DTO.Auth.SignUp;
 
 namespace Curate.Application.Mapper;
 

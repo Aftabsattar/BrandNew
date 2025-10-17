@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
-using Curate.Application.DTO.Auth;
+using Curate.Application.DTO.Auth.Login;
+using Curate.Application.DTO.Auth.SignUp;
 using Curate.Application.Interface.Auth;
 using Curate.Application.IServices;
 using Curate.Domain.Entities.Auth;
@@ -40,6 +41,13 @@ public class AuthService : IAuthService
         return otp;
     }
 
+    public async Task<string> Login(LoginWithPasscodeDto login)
+    {
+        var user = await _authRepository.GetByEmail(login.Email);
+        if (user == null) throw new Exception("User Not Found");
+        return (user.IsUsed && user.IsVerified) ? _jwtService.GenerateJwtToken(user) : "User Not Verify";
+    }
+
     public async Task<string> OtpGenerationWithEmail(RequestOtpDto requestOtpDto)
     {
         if (requestOtpDto.Email== null) throw new Exception("Please Enter a Email");
@@ -76,12 +84,11 @@ public class AuthService : IAuthService
         User.IsUsed = true;
         await _authRepository.Update(User);
         var FindUser = await _userRegisterService.GetById(User.Id);
-        if (FindUser.IsUsed && FindUser.IsVerified is false) 
+        if (FindUser.IsUsed && !FindUser.IsVerified) 
         {
-            FindUser.IsVerified = true; await _authRepository.Update(User); 
+            FindUser.IsVerified = true; 
+            await _authRepository.Update(User); 
         }
-
-        
         return _jwtService.GenerateJwtToken(FindUser);
     }
 }
