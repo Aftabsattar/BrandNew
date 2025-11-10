@@ -9,5 +9,5 @@ public interface IRegisterService
     Task<string> Delete(int id);
     Task<List<Register>> GetAll();
     Task<Register> GetById(int id);
-    Task<string> Update(int id , UserUpdateDto registerDto);
+    Task<string> Update(int id, UpdateUserDto registerDto);
 }

@@ -43,7 +43,7 @@ public class UserService:IRegisterService
         return "User Already Exist";
     }
 
-    public async Task<string> Update(int id, UserUpdateDto updateDto)
+    public async Task<string> Update(int id, UpdateUserDto updateDto)
     {
         if (updateDto != null) 
         {

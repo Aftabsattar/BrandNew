@@ -65,20 +65,20 @@ public class AuthService : IAuthService
             await _authRepository.Update(result);
         }
         else return "User not verified";
-        return $"Passcode Create {result.Email} to this email";
+        return $"Passcode Update {result.Email} to this email";
     }
 
     public async Task<string> Verify(string email, int otp)
     {
-        var User = await _authRepository.GetByEmail(email);
-        if (User == null) return "Otp Not Found";
-        if (DateTime.UtcNow > User.ExpireyTime && User.IsUsed is false) return "OTP Expired OR this allready used ";
-        User.IsUsed = true;
-        await _authRepository.Update(User);
-        var FindUser = await _userRegisterService.GetById(User.Id);
+        User? user= await _authRepository.GetByEmail(email);
+        if (user == null) return "Otp Not Found";
+        if (DateTime.UtcNow > user.ExpireyTime && user.IsUsed is false) return "OTP Expired OR this allready used ";
+        user.IsUsed = true;
+        await _authRepository.Update(user);
+        var FindUser = await _userRegisterService.GetById(user.Id);
         if (FindUser.IsUsed && FindUser.IsVerified is false) 
         {
-            FindUser.IsVerified = true; await _authRepository.Update(User); 
+            FindUser.IsVerified = true; await _authRepository.Update(user); 
         }
 
         
