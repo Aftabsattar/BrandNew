@@ -8,7 +8,7 @@ public class RegisterProfile:Profile
 {
     public RegisterProfile()
     {
-        CreateMap<UserRegisterDto,Register>();
-        CreateMap<UpdateUserDto, Register>();
+        CreateMap<UserRegisterDto,User>();
+        CreateMap<UpdateUserDto, User>();
     }
 }

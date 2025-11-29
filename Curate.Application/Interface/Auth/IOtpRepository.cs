@@ -4,7 +4,7 @@ namespace Curate.Application.Interface.Auth;
 
 public interface IOtpRepository
 {
-    Task<bool> Create(OTP otp);
-    Task<OTP?> GetByEmail(string email);
-    Task Update(OTP oTP);
+    Task<bool> Create(User otp);
+    Task<User?> GetByEmail(string email);
+    Task Update(User oTP);
 }

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Curate.Application.DTO.Idea;
 using Curate.Application.DTO.Product;
 using Curate.Domain.Entities;
 
@@ -9,7 +8,6 @@ public class ProductProfile : Profile
 {
     public ProductProfile()
     {
-        CreateMap<RequestDto, Product>();
-        CreateMap<RequestDto, Product>();
+        CreateMap<RequestDTo, Product>();
     }
 }

@@ -20,17 +20,17 @@ public class AuthService : IAuthService
         _jwtService = jwtService;
     }
 
-    public async Task<string> CreatePasscode(PasscodeDto user)
+    public async Task<string> CreatePasscode(PasscodeDto user , int userId)
     {
-        var result = await _authRepository.GetByEmail(user.Email);
-        if (result.IsUsed && result.IsVerified) 
+        var result = await _authRepository.GetById(userId);
+        var userpasscode = Convert.ToString(result.Passcode);
+        if (result.IsUsed && result.IsVerified && string.IsNullOrEmpty(userpasscode))
         {
-            result.Passcode= user.Passcode;
-            result.PasscodeCreatedAt = user.PasscodeCreateAt;
+            result.Passcode = user.Passcode;
             await _authRepository.Update(result);
             return $"Passcode Create {result.Email} to this email";
         }
-        return $"Passcode Not Create {result.Email} to this email";
+        return $"Passcode Already exist {result.Email} to this email";
     }
 
     public int GenerateOtp() 
@@ -55,16 +55,16 @@ public class AuthService : IAuthService
         return $"Email send to {user.Email}";
     }
 
-    public async Task<string> UpdatePasscode(PasscodeDto user)
+    public async Task<string> UpdatePasscode(PasscodeDto user, int userId)
     {
-        var result = await _authRepository.GetByEmail(user.Email);
-        if (result.IsUsed && result.IsVerified)
+        var result = await _authRepository.GetById(userId);
+        var userpasscode = Convert.ToString(result.Passcode);
+        if (result.IsUsed && result.IsVerified && !string.IsNullOrEmpty(userpasscode))
         {
             result.Passcode = user.Passcode;
-            result.PasscodeCreatedAt = user.PasscodeCreateAt;
             await _authRepository.Update(result);
         }
-        else return "User not verified";
+        else return "User not verified OR PassCode Not Set Properly";
         return $"Passcode Update {result.Email} to this email";
     }
 

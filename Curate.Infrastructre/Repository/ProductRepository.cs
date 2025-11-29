@@ -1,5 +1,9 @@
-﻿using Curate.Application.Interface;
+﻿using Curate.Application.DTO.Search;
+using Curate.Application.Interface;
+using Curate.Domain.Entities;
+using Curate.Domain.Search;
 using Curate.Infrastructre.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Curate.Infrastructre.Repository;
 
@@ -10,28 +14,58 @@ public class ProductRepository : IProductRepository
     {
         _appDbContext = appDbContext;
     }
-    public Task<string> Create()
+
+    public async Task<bool> Create(Product product)
     {
-        throw new NotImplementedException();
+        var productId = await _appDbContext.products.FindAsync(product.Id);
+        if (productId != null) return false; 
+        await _appDbContext.products.AddAsync(product);
+        await _appDbContext.SaveChangesAsync();
+        return true;
     }
 
-    public Task<string> Delete()
+    public async Task<bool> Delete(int id)
     {
-        throw new NotImplementedException();
+       var result = await _appDbContext.products.FindAsync(id);
+       if (result != null)
+        {
+            _appDbContext.products.Remove(result);
+            await _appDbContext.SaveChangesAsync();
+            return true;
+        }
+       return false;
     }
 
-    public Task<string> GetAll()
+    public async Task<IQueryable<Product>> GetAll(string? textQuery, string? sortOrder, string? sortBy)
     {
-        throw new NotImplementedException();
+        var query = _appDbContext.products.AsQueryable();
+        if(!string.IsNullOrEmpty(textQuery))
+        {
+            query = query.Where(x => x.Title.Contains(textQuery) || 
+            x.Description.Contains(textQuery) || 
+            x.RetailerName.Contains(textQuery));
+        }
+        if (!string.IsNullOrEmpty(sortOrder))
+        {
+            if (sortBy?.ToUpper() == "DESC") query = query.OrderByDescending(x => EF.Property<object>(x, sortOrder));
+            else query = query.OrderBy(x => EF.Property<object>(x, sortOrder));
+        }
+        return query;
     }
 
-    public Task<string> GetById(int id)
+    public async Task<Product> GetById(int id)
     {
-        throw new NotImplementedException();
+        return await _appDbContext.products.FirstOrDefaultAsync(x=> x.Id == id);
     }
 
-    public Task<string> Update()
+    public async Task<bool> Update(Product product)
     {
-        throw new NotImplementedException();
+        var result = _appDbContext.products.Update(product);
+        if (result != null)
+        {
+            await _appDbContext.SaveChangesAsync();
+            return true;
+        }
+        return false;
     }
 }

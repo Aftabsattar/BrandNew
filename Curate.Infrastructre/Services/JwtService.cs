@@ -23,11 +23,11 @@ public class JwtService : IJwtService
         var Issuer = JwtSetting["Issuer"];
         var Audience = JwtSetting["Audience"];
         var sub = JwtSetting["sub"];
-        var ExpiryMinutes = JwtSetting["ExpiryMinutes"];
+        var ExpiryMinutes = JwtSetting["DurationInMinutes"];
 
         var Claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userRegister.Id.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, userRegister.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, userRegister.Email),
             new Claim("IsProfileCompleted", userRegister.IsProfileCompleted.ToString())
         };
@@ -38,7 +38,7 @@ public class JwtService : IJwtService
         var token = new JwtSecurityToken(
             issuer: Issuer,
             audience: Audience,
-            expires: DateTime.UtcNow.AddMinutes(10),
+            expires: DateTime.UtcNow.AddHours(10),
             claims:Claims,
             signingCredentials: Credentials
             );

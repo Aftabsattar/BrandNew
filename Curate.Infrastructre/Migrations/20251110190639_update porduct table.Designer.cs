@@ -4,6 +4,7 @@ using Curate.Infrastructre.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Curate.Infrastructre.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251110190639_update porduct table")]
+    partial class updateporducttable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,9 +55,8 @@ namespace Curate.Infrastructre.Migrations
                     b.Property<int>("Otp")
                         .HasColumnType("int");
 
-                    b.Property<string>("Passcode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Passcode")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("PasscodeCreatedAt")
                         .HasColumnType("datetime2");
@@ -120,9 +122,6 @@ namespace Curate.Infrastructre.Migrations
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()

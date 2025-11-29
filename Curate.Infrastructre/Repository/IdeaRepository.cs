@@ -21,11 +21,10 @@ public class IdeaRepository : IIdeaRepository
         return false;
     }
 
-    public async Task<bool> Delete(int id)
+    public async Task<bool> Delete(Idea idea)
     {
-        var existIdea = await _appDbContext.ideas.FindAsync(id);
-        if (existIdea == null) return false;
-         _appDbContext.ideas.Remove(existIdea);
+        if (idea == null) return false;
+         _appDbContext.ideas.Remove(idea);
         await _appDbContext.SaveChangesAsync();
         return true;
     }

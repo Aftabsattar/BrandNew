@@ -1,11 +1,12 @@
 ﻿using Curate.Application.DTO.Product;
 using Curate.Application.IServices;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Curate.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/product")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -15,24 +16,41 @@ namespace Curate.API.Controllers
             _productService = productService;
         }
 
-        [HttpGet]
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadImage(IFormFile formFile)
+        {
+            var FileName = Path.GetFileName(formFile.FileName);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Product", FileName);
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await formFile.CopyToAsync(fileStream);
+            }
+            var Baseurl = $"{Request.Scheme}://{Request.Host}";
+            var PublicUrl = $"{Baseurl}/Product/{FileName}";
+            return Ok(new UploadImageResponse { ImageUrl = Baseurl, SourceUrl = PublicUrl});
+        }
+        [Authorize]
+        [HttpPost("create")]
         public async Task<IActionResult> Create(RequestDTo requestDTo)
         {
-            var result = await _productService.Create(requestDTo);
+            var userId =Convert.ToInt32( User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await _productService.Create(requestDTo,userId);
             return Ok(result);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(RequestDTo requestDTo)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id , UpdateRequest requestDTo)
         {
-            var result = await _productService.Update(requestDTo);
+            var userId = Convert.ToInt32( User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await _productService.Update(id , requestDTo, userId);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _productService.Delete(id);
+            var userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await _productService.Delete(id, userId);
             return Ok(result);
         }
 
@@ -43,10 +61,10 @@ namespace Curate.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet("all")]
-        public async Task<IActionResult> GetAll()
-        {
-            var result = await _productService.GetAll();
+        [HttpGet]
+        public async Task<IActionResult> GetAll(string? textQuery, string? sortBy = "Id", string? sortOrder = "Asce", int PageNumber =1, int PageSize = 6)
+        { 
+            var result = await _productService.GetAll(textQuery , sortBy, sortOrder, PageNumber, PageSize);
             return Ok(result);
         }
     }

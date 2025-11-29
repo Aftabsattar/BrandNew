@@ -22,12 +22,12 @@ public class UserService:IRegisterService
         return result ? "User Delete succesfuly" : "User not Delete succesfuly";
     }
 
-    public async Task<List<Register>> GetAll() 
+    public async Task<List<User>> GetAll() 
     {
         return await _userRepository.GetAll();
     }
 
-    public async Task<Register> GetById(int id)
+    public async Task<User> GetById(int id)
     {
         return await _userRepository.GetById(id);
     }
@@ -36,7 +36,7 @@ public class UserService:IRegisterService
     {
         if (registerDto != null)
         {
-            var user = _mapper.Map<Register>(registerDto);
+            var user = _mapper.Map<User>(registerDto);
             var result = await _userRepository.Create(user);
             if (result) return "User Create Successfully";
         }

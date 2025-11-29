@@ -29,7 +29,7 @@ public class OtpService : IOtpService
     public async Task<string> OtpGenerationWithEmail(string email)
     {
         if (email == null) throw new Exception("Please Enter a Email");
-        var user = new OTP
+        var user = new User
         {
             Email = email,
             Otp = GenerateOtp(),

@@ -1,6 +1,8 @@
 ﻿using Curate.Application.DTO.Idea;
 using Curate.Application.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Curate.API.Controllers
 {
@@ -23,23 +25,26 @@ namespace Curate.API.Controllers
             {
                 await formFile.CopyToAsync(fileStream);
             }
-
             var baseurl = $"{Request.Scheme}://{Request.Host}";
             var PublicUrl = $"{baseurl}/Image/{FileName}";
             return Ok(PublicUrl);
         }
 
+        [Authorize]
         [HttpPost("create")]
         public async Task<IActionResult> Create(IdeaRequestDto requestDto)
         {
-            var result = await _ideaService.Create(requestDto);
+            int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await _ideaService.Create(requestDto,userId);
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, IdeaUpdateDto updatetDto)
         {
-            var result = await _ideaService.Update(id, updatetDto);
+            int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await _ideaService.Update(id, updatetDto,userId);
             return Ok(result);
         }
 
@@ -57,10 +62,12 @@ namespace Curate.API.Controllers
             return Ok(resutl);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _ideaService.DeleteAsync(id);
+            int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await _ideaService.DeleteAsync(id,userId);
             return Ok(result);
         }
     }

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Curate.Application.DTO.Product;
+using Curate.Application.DTO.Search;
 using Curate.Application.Interface;
 using Curate.Application.IServices;
 using Curate.Domain.Entities;
+using Curate.Domain.Search;
 
 namespace Curate.Infrastructre.Services;
 
@@ -15,7 +17,7 @@ public class ProductService : IProductService
         _product = product;
         _mapper = mapper;
     }
-    public async Task<string> Create(RequestDTo requestDTo)
+    public async Task<string> Create(RequestDTo requestDTo, int userId)
     {
         if(requestDTo != null)
         {
@@ -26,29 +28,55 @@ public class ProductService : IProductService
         return "Something went Wrong Product not created successfully";
     }
 
-    public async Task<string> Delete(int id)
+    public async Task<string> Delete(int id, int userId)
     {
         var result =  _product.GetById(id);
         if (result != null)
         {
-            await _product.Delete(result.Result);
+            await _product.Delete(result.Id);
             return "Product deleted successfully";
         }
         return "Product not found";
     }
 
-    public Task<string> GetAll()
+    public async Task<PagedResult<Product>> GetAll(string? textQuery, string? sortOrder, string? sortBy, int PageNumber, int PageSize)
     {
-        throw new NotImplementedException();
+        var query = await _product.GetAll(textQuery, sortOrder, sortBy);
+        var TotalRecords = query.Count();
+        var Item = query
+            .Skip((PageNumber - 1) * PageSize)
+            .Take(PageSize)
+            .ToList();
+
+            var response = new PagedResult<Product>
+            {
+                TotalRecords = TotalRecords,
+                Items = Item,
+                TotalPage = (int)Math.Ceiling((double)TotalRecords / PageSize),
+                PageNumber = PageNumber,
+                PageSize = PageSize
+            };
+        return response;
     }
 
-    public Task<string> GetById(int id)
+    public async Task<Product> GetById(int id)
     {
-        throw new NotImplementedException();
+        return await _product.GetById(id);
     }
 
-    public Task<string> Update(RequestDTo requestDTo)
+    public async Task<string> Update(int id ,UpdateRequest updateRequest, int userId)
     {
-        throw new NotImplementedException();
+        var result = await _product.GetById(id);
+        if (result != null)
+        {
+            result.Title = updateRequest.Title;
+            result.Description = updateRequest.Description;
+            result.Price = updateRequest.Price;
+            result.UpdatedAt = updateRequest.UpdateAt;
+            result.RetailerName= updateRequest.RetailerName;
+            var updateProduct = await _product.Update(result);
+            if (updateProduct) return "Product Update Succcesfuly";
+        }
+        return "Something Went Wrong Product not Update Succcesfuly";
     }
 }

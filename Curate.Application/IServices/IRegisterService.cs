@@ -7,7 +7,7 @@ public interface IRegisterService
 {
     Task<string> Create(UserRegisterDto registerDto); 
     Task<string> Delete(int id);
-    Task<List<Register>> GetAll();
-    Task<Register> GetById(int id);
+    Task<List<User>> GetAll();
+    Task<User> GetById(int id);
     Task<string> Update(int id, UpdateUserDto registerDto);
 }

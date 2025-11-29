@@ -1,6 +1,8 @@
 ﻿using Curate.Application.DTO.Auth;
 using Curate.Application.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Curate.API.Controllers
 {
@@ -29,17 +31,21 @@ namespace Curate.API.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPost("create-passcode")]
         public async Task<IActionResult> Create(PasscodeDto passcodeDto)
         {
-            var result = await _authService.CreatePasscode(passcodeDto);
+            var userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await _authService.CreatePasscode(passcodeDto, userId);
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPut("update-passcode")]
         public async Task<IActionResult> Update(PasscodeDto passcodeDto)
         {
-            var result = await _authService.UpdatePasscode(passcodeDto);
+            var userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await _authService.UpdatePasscode(passcodeDto, userId);
             return Ok(result);
         }
     }
