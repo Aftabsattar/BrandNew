@@ -2,6 +2,5 @@
 
 public class PasscodeDto
 {
-    public string Email { get; set; } = string.Empty;
-    public int Passcode { get; set; }
+    public int Passcode { get; set; } 
 }

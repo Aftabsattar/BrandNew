@@ -23,13 +23,15 @@ public class JwtService : IJwtService
         var Issuer = JwtSetting["Issuer"];
         var Audience = JwtSetting["Audience"];
         var sub = JwtSetting["sub"];
+        var role = JwtSetting["Role"];
         var ExpiryMinutes = JwtSetting["DurationInMinutes"];
 
         var Claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, userRegister.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, userRegister.Email),
-            new Claim("IsProfileCompleted", userRegister.IsProfileCompleted.ToString())
+            new Claim("IsProfileCompleted", userRegister.IsProfileCompleted.ToString()),
+            new Claim(ClaimTypes.Role, userRegister.Role)
         };
 
         var SecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));

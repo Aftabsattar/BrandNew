@@ -22,12 +22,13 @@ public class IdeaService : IIdeaService
             Title = requestDto.Title,
             Description = requestDto.Description,
             ImageUrl = requestDto.ImageUrl,
-            CreateAt = requestDto.CreateAt,
+            CreateAt = DateOnly.FromDateTime(DateTime.Now),
             OwnerId = userId
         };
         var result = await _idea.CreatAsync(idea);
         return result ? "Idea created succefulley" : "Idea Not created succefulley";
     }
+
 
     public async Task<string> DeleteAsync(int id,int currentUserId)
     {
@@ -41,7 +42,6 @@ public class IdeaService : IIdeaService
     public async Task<List<Idea>> GetAll()
     {
          return await _idea.GetAll();
-
     }
 
     public async Task<Idea?> GetById(int id)

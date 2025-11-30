@@ -29,7 +29,8 @@ namespace Curate.API.Controllers
             var PublicUrl = $"{Baseurl}/Product/{FileName}";
             return Ok(new UploadImageResponse { ImageUrl = Baseurl, SourceUrl = PublicUrl});
         }
-        [Authorize]
+
+        [Authorize(Roles ="Admin")]
         [HttpPost("create")]
         public async Task<IActionResult> Create(RequestDTo requestDTo)
         {
@@ -38,6 +39,7 @@ namespace Curate.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id , UpdateRequest requestDTo)
         {
@@ -46,6 +48,7 @@ namespace Curate.API.Controllers
             return Ok(result);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using Azure.Core;
 using Curate.Application.DTO.Auth;
 using Curate.Application.Interface.Auth;
 using Curate.Application.IServices;
@@ -22,11 +23,12 @@ public class AuthService : IAuthService
 
     public async Task<string> CreatePasscode(PasscodeDto user , int userId)
     {
+        if (user == null) return "Please Enter your PassCode";
         var result = await _authRepository.GetById(userId);
-        var userpasscode = Convert.ToString(result.Passcode);
-        if (result.IsUsed && result.IsVerified && string.IsNullOrEmpty(userpasscode))
+        if (result.IsUsed && result.IsVerified && result.IsPasscodeCreate == false)
         {
             result.Passcode = user.Passcode;
+            result.IsPasscodeCreate = true;
             await _authRepository.Update(result);
             return $"Passcode Create {result.Email} to this email";
         }
