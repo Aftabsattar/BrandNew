@@ -10,10 +10,12 @@ public class IdeaService : IIdeaService
 {
     private readonly IIdeaRepository _idea;
     private readonly IMapper _mapper;
-    public IdeaService(IIdeaRepository idea, IMapper mapper)
+    private readonly IIdeaProductServices _ideaProductService;
+    public IdeaService(IIdeaProductServices ideaProductService,IIdeaRepository idea, IMapper mapper)
     {
         _idea = idea;
         _mapper = mapper;
+        _ideaProductService = ideaProductService;
     }
     public async Task<string> Create(IdeaRequestDto requestDto, int userId)
     {
@@ -26,6 +28,12 @@ public class IdeaService : IIdeaService
             OwnerId = userId
         };
         var result = await _idea.CreatAsync(idea);
+        if (result) 
+        {
+            var IdeaProduct = await _idea.GetById(userId);
+            var ResultIdeaProduct = _ideaProductService.Create(IdeaProduct);
+        }
+        
         return result ? "Idea created succefulley" : "Idea Not created succefulley";
     }
 

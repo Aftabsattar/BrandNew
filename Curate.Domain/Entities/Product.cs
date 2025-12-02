@@ -11,4 +11,5 @@ public class Product
     public DateTime UpdatedAt { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
     public string SourceUrl { get; set; } = string.Empty;
+    public ICollection<IdeaProducts> IdeaProducts{ get; set; } = null!;
 }
