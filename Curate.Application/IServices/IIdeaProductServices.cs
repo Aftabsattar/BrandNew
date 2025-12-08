@@ -1,13 +1,13 @@
-﻿using Curate.Domain.Entities;
+﻿using Curate.Application.DTO.Idea;
+using Curate.Domain.Entities;
 using System.Globalization;
 
 namespace Curate.Application.IServices;
 
 public interface IIdeaProductServices
 {
-    Task<bool> Create(Idea idea);
-    Task<bool> Delete();
-    Task<bool> Update();
-    Task<bool> GetAll();
-    Task<bool> GetById();
+    Task<bool> Create(IdeaProducts idea);
+    Task<bool> Update(IdeaProducts ideaProducts);
+    Task<List<IdeaDto>> GetAll(int userId);
+    Task<IdeaDto?> GetById(int id ,int userId);
 }

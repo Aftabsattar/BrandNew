@@ -70,5 +70,12 @@ namespace Curate.API.Controllers
             var result = await _productService.GetAll(textQuery , sortBy, sortOrder, PageNumber, PageSize);
             return Ok(result);
         }
+
+        [HttpGet("all ids")]
+        public async Task<IActionResult> GetProductIds()
+        {
+            var result = await _productService.GetAllId();
+            return Ok(result);
+        }
     }
 }

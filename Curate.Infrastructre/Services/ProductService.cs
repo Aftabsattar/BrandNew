@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Curate.Application.DTO.Product;
-using Curate.Application.DTO.Search;
 using Curate.Application.Interface;
 using Curate.Application.IServices;
 using Curate.Domain.Entities;
@@ -59,6 +58,11 @@ public class ProductService : IProductService
         return response;
     }
 
+    public async Task<List<int>> GetAllId()
+    {
+        return await _product.GetAllId();
+    }
+
     public async Task<Product> GetById(int id)
     {
         return await _product.GetById(id);
@@ -72,7 +76,7 @@ public class ProductService : IProductService
             result.Title = updateRequest.Title;
             result.Description = updateRequest.Description;
             result.Price = updateRequest.Price;
-            result.UpdatedAt = updateRequest.UpdateAt;
+            result.UpdatedAt = DateTime.Now;
             result.RetailerName= updateRequest.RetailerName;
             var updateProduct = await _product.Update(result);
             if (updateProduct) return "Product Update Succcesfuly";

@@ -1,6 +1,9 @@
-﻿using Curate.Application.Interface;
+﻿using Curate.Application.DTO.Idea;
+using Curate.Application.Interface;
 using Curate.Application.IServices;
 using Curate.Domain.Entities;
+using Microsoft.VisualBasic;
+using Org.BouncyCastle.Crypto;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
@@ -14,36 +17,26 @@ public class IdeaProductService : IIdeaProductServices
         _ideaProductRepository = ideaProductRepository;
     }
 
-    public async Task<bool> Create(Idea idea)
+    public async Task<bool> Create(IdeaProducts idea)
     {
         if (idea == null) return false;
-        var IdeaProduct = new IdeaProducts
-        {
-            IdeaId = idea.Id,
-            ProductId = idea.ProductId.First().ProductId
-        };
-        var result =await _ideaProductRepository.Create(IdeaProduct);
-        if(result) return true;
-        return false;
+        await _ideaProductRepository.Create(idea);
+        return true;
     }
 
-    public Task<bool> Delete()
+    public async Task<List<IdeaDto>> GetAll(int userId)
     {
-        throw new NotImplementedException();
+        return await _ideaProductRepository.GetAll(userId);
     }
 
-    public Task<bool> GetAll()
+    public async Task<IdeaDto?> GetById(int id, int userId)
     {
-        throw new NotImplementedException();
+        return await _ideaProductRepository.GetById(id, userId);
     }
 
-    public Task<bool> GetById()
+    public async Task<bool> Update(IdeaProducts ideaProduct)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> Update()
-    {
-        throw new NotImplementedException();
+        var result = await _ideaProductRepository.Update(ideaProduct);
+        return result;
     }
 }

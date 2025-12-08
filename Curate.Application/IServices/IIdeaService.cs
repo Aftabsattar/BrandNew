@@ -7,7 +7,6 @@ public interface IIdeaService
 {
     Task<string> Create(IdeaRequestDto requestDto,int userId);
     Task<string> Update(int id, IdeaUpdateDto updatetDto ,int userId);
-    Task<string> DeleteAsync(int id, int userId);
-    Task<List<Idea>> GetAll();
-    Task<Idea?> GetById(int id);
+    //Task<string> DeleteAsync(int id, int userId);
+    Task<Idea?> GetById(int id, int userId);
 }

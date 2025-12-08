@@ -6,5 +6,4 @@ public class UpdateRequest
     public string Description { get; set; } = string.Empty;
     public int Price { get; set; }
     public string RetailerName { get; set; } = string.Empty;
-    public DateTime UpdateAt { get; set; }
 }

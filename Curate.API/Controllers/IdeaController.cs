@@ -11,9 +11,11 @@ namespace Curate.API.Controllers
     public class IdeaController : ControllerBase
     {
         private readonly IIdeaService _ideaService;
-        public IdeaController(IIdeaService ideaService)
+        private readonly IIdeaProductServices _ideaProductServices;
+        public IdeaController(IIdeaService ideaService, IIdeaProductServices ideaProductServices)
         {
             _ideaService = ideaService;
+            _ideaProductServices = ideaProductServices;
         }
 
         [HttpPost("upload")]
@@ -44,31 +46,33 @@ namespace Curate.API.Controllers
         public async Task<IActionResult> Update(int id, IdeaUpdateDto updatetDto)
         {
             int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var result = await _ideaService.Update(id, updatetDto,userId);
+            var result = await _ideaService.Update(id ,updatetDto, userId);
             return Ok(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _ideaService.GetAll();
+            int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await _ideaProductServices.GetAll(userId);
             return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var resutl = await _ideaService.GetById(id);
+            int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var resutl = await _ideaProductServices.GetById(id,userId);
             return Ok(resutl);
         }
 
-        [Authorize]
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var result = await _ideaService.DeleteAsync(id,userId);
-            return Ok(result);
-        }
+        //[Authorize]
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete(int id)
+        //{
+        //    int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+        //    var result = await _ideaService.DeleteAsync(id,userId);
+        //    return Ok(result);
+        //}
     }
 }

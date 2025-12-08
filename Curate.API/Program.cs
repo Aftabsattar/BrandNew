@@ -8,7 +8,6 @@ using Curate.Infrastructre.Context;
 using Curate.Infrastructre.Repository;
 using Curate.Infrastructre.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -28,6 +27,8 @@ builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IIdeaProductServices, IdeaProductService>();
+builder.Services.AddScoped<IIdeaProductRepository, IdeaProductRepository>();
 //builder.Services.AddScoped<>
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserRegisterService, UserRegisterService>();

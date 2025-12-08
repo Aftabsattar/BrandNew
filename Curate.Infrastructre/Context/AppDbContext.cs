@@ -13,4 +13,22 @@ public class AppDbContext:DbContext
     public DbSet<UserProfile> profiles { get; set; }
     public DbSet<Product> products { get; set; }
     public DbSet<IdeaProducts> ideaProducts { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<IdeaProducts>()
+            .HasKey(ip => new { ip.IdeaId, ip.ProductId });
+
+        modelBuilder.Entity<IdeaProducts>()
+            .HasOne(ip => ip.Idea)
+            .WithMany(i => i.IdeaProducts)
+            .HasForeignKey(ip => ip.IdeaId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<IdeaProducts>()
+            .HasOne(ip => ip.Product)
+            .WithMany(i => i.IdeaProducts)
+            .HasForeignKey(ip => ip.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
 }

@@ -8,5 +8,5 @@ public class Idea
     public DateOnly CreateAt { get; set; }
     public int OwnerId { get; set; }
     public string ImageUrl { get; set; } = string.Empty;
-    public  ICollection<IdeaProducts> ProductId { get; set; } = null!;
+    public ICollection<IdeaProducts> IdeaProducts { get; set; } 
 }

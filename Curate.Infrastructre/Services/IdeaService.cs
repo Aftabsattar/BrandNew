@@ -1,8 +1,12 @@
 ﻿using AutoMapper;
 using Curate.Application.DTO.Idea;
+using Curate.Application.DTO.Product;
 using Curate.Application.Interface;
 using Curate.Application.IServices;
 using Curate.Domain.Entities;
+using Curate.Infrastructre.Context;
+using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Crypto;
 
 namespace Curate.Infrastructre.Services;
 
@@ -11,12 +15,15 @@ public class IdeaService : IIdeaService
     private readonly IIdeaRepository _idea;
     private readonly IMapper _mapper;
     private readonly IIdeaProductServices _ideaProductService;
-    public IdeaService(IIdeaProductServices ideaProductService,IIdeaRepository idea, IMapper mapper)
+    private readonly AppDbContext _appDbContext;
+    public IdeaService(IIdeaProductServices ideaProductService,IIdeaRepository idea, IMapper mapper,AppDbContext appDbContext)
     {
         _idea = idea;
         _mapper = mapper;
         _ideaProductService = ideaProductService;
+        _appDbContext = appDbContext;
     }
+
     public async Task<string> Create(IdeaRequestDto requestDto, int userId)
     {
         var idea = new Idea
@@ -27,43 +34,73 @@ public class IdeaService : IIdeaService
             CreateAt = DateOnly.FromDateTime(DateTime.Now),
             OwnerId = userId
         };
-        var result = await _idea.CreatAsync(idea);
-        if (result) 
+        await _idea.CreatAsync(idea);
+
+        if (requestDto.ProductId != null && requestDto.ProductId.Count > 0)
         {
-            var IdeaProduct = await _idea.GetById(userId);
-            var ResultIdeaProduct = _ideaProductService.Create(IdeaProduct);
+            foreach (var productId in requestDto.ProductId)
+            {
+                var ideaProduct = new IdeaProducts
+                {
+                    IdeaId = idea.Id,
+                    ProductId = productId
+                };
+                await _ideaProductService.Create(ideaProduct);
+            }
         }
-        
-        return result ? "Idea created succefulley" : "Idea Not created succefulley";
+        return "Idea created succefulley";
     }
 
 
-    public async Task<string> DeleteAsync(int id,int currentUserId)
+    //public async Task<string> DeleteAsync(int id,int currentUserId)
+    //{
+    //    var Idea = await _idea.GetById(id);
+    //    if (Idea == null) return "Idea not Found";
+    //    if (Idea.OwnerId != currentUserId) return "You are not authorized to delete this idea";
+    //    var deleteResult = await _idea.Delete(Idea);
+    //    return deleteResult ? "idea Delete Successfully" : "idea not Delete Successfully";
+    //}
+
+    //xxxxxxxxxxx
+    //public async Task<List<IdeaDto>> GetAll(int userId)
+    //{
+    //     return await _idea.GetAll(userId);
+    //}
+
+    public async Task<Idea?> GetById(int id, int userId)
     {
-        var Idea = await _idea.GetById(id);
-        if (Idea == null) return "Idea not Found";
-        if (Idea.OwnerId != currentUserId) return "You are not authorized to delete this idea";
-        var deleteResult = await _idea.Delete(Idea);
-        return deleteResult ? "idea Delete Successfully" : "idea not Delete Successfully";
+        return await _idea.GetById(id, userId);
     }
 
-    public async Task<List<Idea>> GetAll()
+    public async Task<string> Update(int id, IdeaUpdateDto updateDto, int userId)
     {
-         return await _idea.GetAll();
-    }
-
-    public async Task<Idea?> GetById(int id)
-    {
-        return await _idea.GetById(id);
-    }
-
-    public async Task<string> Update(int id, IdeaUpdateDto updateDto, int currentUserId)
-    {
-        var FindIdea = await _idea.GetById(id);
+        var FindIdea = await _idea.GetById(id,userId);
         if (FindIdea == null) return "Idea not Found";
-        if (FindIdea.OwnerId != currentUserId) return "You are not authorized to update this idea";
-        var Updatedidea = _mapper.Map(updateDto, FindIdea);
-        var result = await _idea.UpdateAsync(Updatedidea);
-        return result ? "Idea Updated Succefully" : "idea not Updated succefully";
+        if (FindIdea.OwnerId != userId) return "You are not authorized to update this idea";
+        FindIdea.Title = updateDto.Title;
+        FindIdea.Description = updateDto.Description;
+        FindIdea.ImageUrl = updateDto.ImageUrl;
+        FindIdea.OwnerId = userId;
+        FindIdea.CreateAt = DateOnly.FromDateTime(DateTime.Now);
+        await _idea.UpdateAsync(FindIdea);
+
+        await _appDbContext.ideas.Entry(FindIdea)
+              .Collection(i => i.IdeaProducts)
+              .LoadAsync();
+
+        FindIdea.IdeaProducts.Clear();
+        if (updateDto.ProductId != null && updateDto.ProductId.Count > 0)
+        {
+            foreach (var productId in updateDto.ProductId)
+            {
+                var ideaProduct = new IdeaProducts
+                {
+                    IdeaId = FindIdea.Id,
+                    ProductId = productId
+                };
+                await _ideaProductService.Create(ideaProduct);
+            }
+        }
+        return "idea Updated succefully";
     }
 }

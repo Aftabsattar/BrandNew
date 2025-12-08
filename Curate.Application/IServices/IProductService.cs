@@ -9,6 +9,7 @@ public interface IProductService
     Task<string> Create(RequestDTo requestDTo, int userId);
     Task<string> Update(int id ,UpdateRequest updateRequest, int userId);
     Task<string> Delete(int id, int userId);
+    Task<List<int>> GetAllId();
     Task<Product> GetById(int id);
     Task<PagedResult<Product>> GetAll(string? textQuery, string? sortOrder, string? sortBy, int PageNumber, int PageSize);
 }

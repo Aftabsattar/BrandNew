@@ -53,6 +53,11 @@ public class ProductRepository : IProductRepository
         return query;
     }
 
+    public async Task<List<int>> GetAllId()
+    {
+        return await _appDbContext.products.Select(p=> p.Id).ToListAsync();
+    }
+
     public async Task<Product> GetById(int id)
     {
         return await _appDbContext.products.FirstOrDefaultAsync(x=> x.Id == id);
