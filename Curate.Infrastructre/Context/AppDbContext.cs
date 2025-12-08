@@ -23,12 +23,12 @@ public class AppDbContext:DbContext
             .HasOne(ip => ip.Idea)
             .WithMany(i => i.IdeaProducts)
             .HasForeignKey(ip => ip.IdeaId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<IdeaProducts>()
             .HasOne(ip => ip.Product)
             .WithMany(i => i.IdeaProducts)
             .HasForeignKey(ip => ip.ProductId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

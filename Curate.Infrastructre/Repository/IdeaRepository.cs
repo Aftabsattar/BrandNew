@@ -23,13 +23,13 @@ public class IdeaRepository : IIdeaRepository
         return false;
     }
 
-    //public async Task<bool> Delete(IdeaDto idea)
-    //{
-    //    if (idea == null) return false;
-    //    _appDbContext.ideas.Remove(idea);
-    //    await _appDbContext.SaveChangesAsync();
-    //    return true;
-    //}
+    public async Task<bool> Delete(Idea idea)
+    {
+        if (idea == null) return false;
+        _appDbContext.ideas.Remove(idea);
+        await _appDbContext.SaveChangesAsync();
+        return true;
+    }
 
     public async Task<Idea?> GetById(int id, int userId)
     {

@@ -5,8 +5,6 @@ using Curate.Application.Interface;
 using Curate.Application.IServices;
 using Curate.Domain.Entities;
 using Curate.Infrastructre.Context;
-using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Crypto;
 
 namespace Curate.Infrastructre.Services;
 
@@ -52,20 +50,14 @@ public class IdeaService : IIdeaService
     }
 
 
-    //public async Task<string> DeleteAsync(int id,int currentUserId)
-    //{
-    //    var Idea = await _idea.GetById(id);
-    //    if (Idea == null) return "Idea not Found";
-    //    if (Idea.OwnerId != currentUserId) return "You are not authorized to delete this idea";
-    //    var deleteResult = await _idea.Delete(Idea);
-    //    return deleteResult ? "idea Delete Successfully" : "idea not Delete Successfully";
-    //}
-
-    //xxxxxxxxxxx
-    //public async Task<List<IdeaDto>> GetAll(int userId)
-    //{
-    //     return await _idea.GetAll(userId);
-    //}
+    public async Task<string> DeleteAsync(int id, int currentUserId)
+    {
+        var Idea = await _idea.GetById(id, currentUserId);
+        if (Idea == null) return "Idea not Found";
+        if (Idea.OwnerId != currentUserId && Idea.Id != id) return "You are not authorized to delete this idea";
+        var deleteResult = await _idea.Delete(Idea);
+        return deleteResult ? "idea Delete Successfully" : "idea not Delete Successfully";
+    }
 
     public async Task<Idea?> GetById(int id, int userId)
     {

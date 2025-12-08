@@ -66,13 +66,13 @@ namespace Curate.API.Controllers
             return Ok(resutl);
         }
 
-        //[Authorize]
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(int id)
-        //{
-        //    int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-        //    var result = await _ideaService.DeleteAsync(id,userId);
-        //    return Ok(result);
-        //}
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            int userId = Convert.ToInt32(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var result = await _ideaService.DeleteAsync(id, userId);
+            return Ok(result);
+        }
     }
 }
